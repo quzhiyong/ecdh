@@ -5,9 +5,11 @@ import (
 	"crypto"
 	"crypto/elliptic"
 	"crypto/rand"
+
+
 	"encoding/hex"
 	"fmt"
-	"gecdh/ecdh"
+	"ecdh/ecdh"
 	"math/big"
 )
 
@@ -81,5 +83,5 @@ func testECDH(e ecdh.ECDH, ) {
 		fmt.Println("The two shared keys: %d, %d do not match", secret1, secret2)
 	}
 
-	fmt.Println("The two shared keys: %d, %d do not match", hex.EncodeToString(secret1), hex.EncodeToString(secret2))
+
 }

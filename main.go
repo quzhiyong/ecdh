@@ -5,11 +5,11 @@ import (
 	"crypto"
 	"crypto/elliptic"
 	"crypto/rand"
-
+	"github.com/quzhiyong/ecdh/ecdh"
 
 	"encoding/hex"
 	"fmt"
-	"ecdh/ecdh"
+
 	"math/big"
 )
 

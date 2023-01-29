@@ -1,4 +1,4 @@
-package ecdh
+package ecdh_server
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/json"
-
+	"github.com/quzhiyong/ecdh/ecdh"
 
 	"encoding/hex"
 	"fmt"
@@ -26,11 +26,10 @@ func gmpInit(s string) string  {
 	return b.String()
 }
 
-
 //EcdhExchange 交换秘钥
 func EcdhExchange(privKey1 crypto.PrivateKey,pubKey2 crypto.PrivateKey)  {
 	//创建一个P256ecdh
-	e :=NewEllipticECDH(elliptic.P256())
+	e :=ecdh.NewEllipticECDH(elliptic.P256())
 	secret1, err := e.GenerateSharedSecret(privKey1, pubKey2)
 	if err != nil {
 		fmt.Println(err)
@@ -46,7 +45,7 @@ func EcdhGetKey()  (crypto.PrivateKey,crypto.PrivateKey){
 	var err error
 	var ok bool
 	//创建一个ecdh
-	e :=NewEllipticECDH(elliptic.P256())
+	e :=ecdh.NewEllipticECDH(elliptic.P256())
 	privKey, pubKey, err = e.GenerateKey(rand.Reader)
 	if err != nil {
 		fmt.Println(err)
@@ -73,7 +72,7 @@ func EcdhGetKey()  (crypto.PrivateKey,crypto.PrivateKey){
 
 
 
-func testECDH(e ECDH, ) {
+func testECDH(e ecdh.ECDH, ) {
 	var privKey1, privKey2 crypto.PrivateKey
 	var pubKey1, pubKey2 crypto.PublicKey
 	var pubKey1Buf, pubKey2Buf []byte

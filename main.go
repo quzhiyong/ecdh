@@ -5,6 +5,7 @@ import (
 	"crypto"
 	"crypto/elliptic"
 	"crypto/rand"
+	"encoding/json"
 	"github.com/quzhiyong/ecdh/ecdh"
 
 	"encoding/hex"
@@ -25,10 +26,60 @@ func gmpInit(s string) string  {
 	return b.String()
 }
 func main() {
-
-	testECDH(ecdh.NewEllipticECDH(elliptic.P256()))
+	pubKey1, privKey1:=EcdhGetKey()
+	pubKey2, privKey2:=EcdhGetKey()
+	EcdhExchange(privKey1,pubKey2)
+	EcdhExchange(privKey2,pubKey1)
+	//testECDH(ecdh.NewEllipticECDH(elliptic.P256()))
+	//
 
 }
+
+//EcdhExchange 交换秘钥
+func EcdhExchange(privKey1 crypto.PrivateKey,pubKey2 crypto.PrivateKey)  {
+	//创建一个P256ecdh
+	e :=ecdh.NewEllipticECDH(elliptic.P256())
+	secret1, err := e.GenerateSharedSecret(privKey1, pubKey2)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("The two shared keys:", hex.EncodeToString(secret1))
+}
+
+//EcdhGetKey 获取一组ecdh Key数据
+func EcdhGetKey()  (crypto.PrivateKey,crypto.PrivateKey){
+	var privKey crypto.PrivateKey
+	var pubKey crypto.PublicKey
+	var pubKeyBuf []byte
+	var err error
+	var ok bool
+	//创建一个ecdh
+	e :=ecdh.NewEllipticECDH(elliptic.P256())
+	privKey, pubKey, err = e.GenerateKey(rand.Reader)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	pubKeyBuf = e.Marshal(pubKey)
+
+	fmt.Println("pubKeyBuf:",hex.EncodeToString(pubKeyBuf))
+
+
+	pubKey, ok = e.Unmarshal(pubKeyBuf)
+	if !ok {
+		fmt.Println("Unmarshal does not work")
+	}
+
+	fmt.Println("privKey:",privKey)
+	fmt.Println("pubKey:",pubKey)
+
+	pubKey1Json, _ := json.Marshal(pubKey)
+	fmt.Println("pubKey1Json:",string(pubKey1Json))
+
+	return pubKey,privKey
+}
+
+
 
 func testECDH(e ecdh.ECDH, ) {
 	var privKey1, privKey2 crypto.PrivateKey
@@ -42,8 +93,9 @@ func testECDH(e ecdh.ECDH, ) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	cs,_:=json.Marshal(pubKey1)
+	fmt.Println("pubKey1",cs)
 
-	fmt.Println("pubKey1",pubKey1)
 
 
 	privKey2, pubKey2, err = e.GenerateKey(rand.Reader)
@@ -54,7 +106,6 @@ func testECDH(e ecdh.ECDH, ) {
 	pubKey1Buf = e.Marshal(pubKey1)
 	pubKey2Buf = e.Marshal(pubKey2)
 	fmt.Println("pubKey1Buf:",hex.EncodeToString(pubKey1Buf))
-
 
 	pubKey1, ok = e.Unmarshal(pubKey1Buf)
 	if !ok {
@@ -78,7 +129,7 @@ func testECDH(e ecdh.ECDH, ) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	fmt.Println("The two shared keys: %d, %d do not match", hex.EncodeToString(secret1), hex.EncodeToString(secret2))
 	if !bytes.Equal(secret1, secret2) {
 		fmt.Println("The two shared keys: %d, %d do not match", secret1, secret2)
 	}

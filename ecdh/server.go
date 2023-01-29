@@ -25,15 +25,7 @@ func gmpInit(s string) string  {
 	b, _ := new(big.Int).SetString(s, 16)
 	return b.String()
 }
-func main() {
-	pubKey1, privKey1:=EcdhGetKey()
-	pubKey2, privKey2:=EcdhGetKey()
-	EcdhExchange(privKey1,pubKey2)
-	EcdhExchange(privKey2,pubKey1)
-	//testECDH(ecdh.NewEllipticECDH(elliptic.P256()))
-	//
 
-}
 
 //EcdhExchange 交换秘钥
 func EcdhExchange(privKey1 crypto.PrivateKey,pubKey2 crypto.PrivateKey)  {

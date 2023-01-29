@@ -4,27 +4,12 @@ import (
 	"bytes"
 	"crypto"
 	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"github.com/quzhiyong/ecdh/ecdh"
 	"github.com/quzhiyong/ecdh/ecdh_server"
-
-	"encoding/hex"
-	"fmt"
-
-	"math/big"
 )
-
-
-
-func gmp_e(str string)string  {
-	i,_:=new(big.Int).SetString(str,10)
-	return  hex.EncodeToString(i.Bytes())
-}
-
-func gmpInit(s string) string  {
-	b, _ := new(big.Int).SetString(s, 16)
-	return b.String()
-}
 func main() {
 	pubKey1, privKey1:=ecdh_server.EcdhGetKey()
 	pubKey2, privKey2:=ecdh_server.EcdhGetKey()
@@ -34,7 +19,6 @@ func main() {
 	//
 
 }
-
 
 
 func testECDH(e ecdh.ECDH, ) {

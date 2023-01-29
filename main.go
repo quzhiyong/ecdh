@@ -3,10 +3,10 @@ package main
 import (
 	"bytes"
 	"crypto"
-	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/json"
 	"github.com/quzhiyong/ecdh/ecdh"
+	"github.com/quzhiyong/ecdh/ecdh_server"
 
 	"encoding/hex"
 	"fmt"
@@ -26,57 +26,13 @@ func gmpInit(s string) string  {
 	return b.String()
 }
 func main() {
-	pubKey1, privKey1:=EcdhGetKey()
-	pubKey2, privKey2:=EcdhGetKey()
-	EcdhExchange(privKey1,pubKey2)
-	EcdhExchange(privKey2,pubKey1)
+	pubKey1, privKey1:=ecdh_server.EcdhGetKey()
+	pubKey2, privKey2:=ecdh_server.EcdhGetKey()
+	ecdh_server.EcdhExchange(privKey1,pubKey2)
+	ecdh_server.EcdhExchange(privKey2,pubKey1)
 	//testECDH(ecdh.NewEllipticECDH(elliptic.P256()))
 	//
 
-}
-
-//EcdhExchange 交换秘钥
-func EcdhExchange(privKey1 crypto.PrivateKey,pubKey2 crypto.PrivateKey)  {
-	//创建一个P256ecdh
-	e :=ecdh.NewEllipticECDH(elliptic.P256())
-	secret1, err := e.GenerateSharedSecret(privKey1, pubKey2)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("The two shared keys:", hex.EncodeToString(secret1))
-}
-
-//EcdhGetKey 获取一组ecdh Key数据
-func EcdhGetKey()  (crypto.PrivateKey,crypto.PrivateKey){
-	var privKey crypto.PrivateKey
-	var pubKey crypto.PublicKey
-	var pubKeyBuf []byte
-	var err error
-	var ok bool
-	//创建一个ecdh
-	e :=ecdh.NewEllipticECDH(elliptic.P256())
-	privKey, pubKey, err = e.GenerateKey(rand.Reader)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	pubKeyBuf = e.Marshal(pubKey)
-
-	fmt.Println("pubKeyBuf:",hex.EncodeToString(pubKeyBuf))
-
-
-	pubKey, ok = e.Unmarshal(pubKeyBuf)
-	if !ok {
-		fmt.Println("Unmarshal does not work")
-	}
-
-	fmt.Println("privKey:",privKey)
-	fmt.Println("pubKey:",pubKey)
-
-	pubKey1Json, _ := json.Marshal(pubKey)
-	fmt.Println("pubKey1Json:",string(pubKey1Json))
-
-	return pubKey,privKey
 }
 
 

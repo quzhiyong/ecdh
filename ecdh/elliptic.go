@@ -17,7 +17,7 @@ type EllipticPublicKey struct {
 	X, Y *big.Int
 }
 
-type ellipticPrivateKey struct {
+type EllipticPrivateKey struct {
 	D []byte
 }
 
@@ -32,7 +32,7 @@ func NewEllipticECDH(curve elliptic.Curve) ECDH {
 func (e *ellipticECDH) GenerateKey(rand io.Reader) (crypto.PrivateKey, crypto.PublicKey, error) {
 	var d []byte
 	var x, y *big.Int
-	var priv *ellipticPrivateKey
+	var priv *EllipticPrivateKey
 	var pub *EllipticPublicKey
 	var err error
 
@@ -41,7 +41,7 @@ func (e *ellipticECDH) GenerateKey(rand io.Reader) (crypto.PrivateKey, crypto.Pu
 		return nil, nil, err
 	}
 
-	priv = &ellipticPrivateKey{
+	priv = &EllipticPrivateKey{
 		D: d,
 	}
 	pub = &EllipticPublicKey{
@@ -79,7 +79,7 @@ func (e *ellipticECDH) Unmarshal(data []byte) (crypto.PublicKey, bool) {
 //
 // RFC5903 Section 9 states we should only return x.
 func (e *ellipticECDH) GenerateSharedSecret(privKey crypto.PrivateKey, pubKey crypto.PublicKey) ([]byte, error) {
-	priv := privKey.(*ellipticPrivateKey)
+	priv := privKey.(*EllipticPrivateKey)
 	pub := pubKey.(*EllipticPublicKey)
 
 	x, _ := e.curve.ScalarMult(pub.X, pub.Y, priv.D)

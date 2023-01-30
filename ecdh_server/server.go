@@ -20,7 +20,14 @@ func Gmp_e(str string)string  {
 	i,_:=new(big.Int).SetString(str,10)
 	return  hex.EncodeToString(i.Bytes())
 }
+func GmpbigIntToHex(i *big.Int) string  {
 
+	return  hex.EncodeToString(i.Bytes())
+}
+func GmpHexTobigInt(s string) *big.Int  {
+	b, _ := new(big.Int).SetString(s, 16)
+	return b
+}
 func GmpInit(s string) string  {
 	b, _ := new(big.Int).SetString(s, 16)
 	return b.String()

@@ -50,7 +50,7 @@ func (e *curve25519ECDH) Unmarshal(data []byte) (crypto.PublicKey, bool) {
 	return &pub, true
 }
 
-func (e *curve25519ECDH) GenerateSharedSecret(privKey crypto.PrivateKey, pubKey crypto.PublicKey) ([]byte, error) {
+func (e *curve25519ECDH) GenerateSharedSecret(privKey crypto.PrivateKey, pubKey crypto.PublicKey) ([]byte,[]byte, error) {
 	var priv, pub, secret *[32]byte
 
 	priv = privKey.(*[32]byte)
@@ -58,5 +58,5 @@ func (e *curve25519ECDH) GenerateSharedSecret(privKey crypto.PrivateKey, pubKey 
 	secret = new([32]byte)
 
 	curve25519.ScalarMult(secret, priv, pub)
-	return secret[:], nil
+	return secret[:],secret[:], nil
 }

@@ -34,14 +34,14 @@ func GmpInit(s string) string  {
 }
 
 //EcdhExchange 交换秘钥
-func EcdhExchange(privKey1 crypto.PrivateKey,pubKey2 crypto.PrivateKey)  (string,string){
+func EcdhExchange(privKey1 crypto.PrivateKey,pubKey2 crypto.PrivateKey)  (string,string,error){
 	//创建一个P256ecdh
 	e :=ecdh.NewEllipticECDH(elliptic.P256())
 	x,y, err := e.GenerateSharedSecret(privKey1, pubKey2)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return  hex.EncodeToString(x), hex.EncodeToString(y)
+	return  hex.EncodeToString(x), hex.EncodeToString(y),err
 }
 
 //EcdhGetKey 获取一组ecdh Key数据

@@ -57,7 +57,7 @@ func testECDH(e ecdh.ECDH, ) {
 		fmt.Println("Unmarshal does not work")
 	}
 
-	secret1, err = e.GenerateSharedSecret(privKey1, pubKey2)
+	x1,y1, err := e.GenerateSharedSecret(privKey1, pubKey2)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -65,13 +65,13 @@ func testECDH(e ecdh.ECDH, ) {
 
 
 
-	secret2, err = e.GenerateSharedSecret(privKey2, pubKey1)
+	x2,y2, err := e.GenerateSharedSecret(privKey2, pubKey1)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("The two shared keys: %d, %d do not match", hex.EncodeToString(secret1), hex.EncodeToString(secret2))
+	fmt.Println("The two shared keys: %d, %d do not match", hex.EncodeToString(x1), hex.EncodeToString(y1))
 	if !bytes.Equal(secret1, secret2) {
-		fmt.Println("The two shared keys: %d, %d do not match", secret1, secret2)
+		fmt.Println("The two shared keys: %d, %d do not match", x2, y2)
 	}
 
 
